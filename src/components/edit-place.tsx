@@ -14,6 +14,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { CountryCombobox } from './ui/country-combobox';
+import { useState } from 'react';
 
 type Props = {
   id: string;
@@ -31,6 +32,10 @@ export function EditPlace({
   open,
   onOpenChange,
 }: Props) {
+  const [country, setCountry] = useState(countryName);
+  const [place, setPlace] = useState(placeName);
+  const [target, setTarget] = useState(targetDate);
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
@@ -53,7 +58,7 @@ export function EditPlace({
             <Label htmlFor="countryName" className="text-right">
               País
             </Label>
-            <CountryCombobox />
+            <CountryCombobox value={country} setValue={setCountry} />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="placeName" className="text-right">
@@ -78,7 +83,7 @@ export function EditPlace({
           </div>
         </div>
         <DialogFooter className="flex gap-4">
-          <DialogClose>
+          <DialogClose asChild>
             <Button type="button" variant="secondary">
               Fechar
             </Button>

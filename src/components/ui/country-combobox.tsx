@@ -18,21 +18,16 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { usePlacesContext } from '@/contexts/places-context';
 
-const countries = [
-  {
-    value: 'Brasil',
-    label: 'Brasil',
-  },
-  {
-    value: 'Portugal',
-    label: 'Portugal',
-  },
-];
+type Props = {
+  value: string;
+  setValue: React.Dispatch<React.SetStateAction<string>>;
+};
 
-export function CountryCombobox() {
+export function CountryCombobox({ value, setValue }: Props) {
+  const { countries } = usePlacesContext();
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState('Brasil');
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -53,7 +48,7 @@ export function CountryCombobox() {
         <Command>
           <CommandInput placeholder="Busque pelo país..." />
           <CommandList>
-            <CommandEmpty>País não encontrado.</CommandEmpty>
+            <CommandEmpty>Carregando países</CommandEmpty>
             <CommandGroup>
               {countries.map((country) => (
                 <CommandItem

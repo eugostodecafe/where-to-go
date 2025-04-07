@@ -14,12 +14,17 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { CountryCombobox } from './ui/country-combobox';
+import { useState } from 'react';
 
 type Props = {
   open: boolean;
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
 };
 export function AddPlace({ open, onOpenChange }: Props) {
+  const [country, setCountry] = useState('');
+  const [place, setPlace] = useState('');
+  const [target, setTarget] = useState('');
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
@@ -42,7 +47,7 @@ export function AddPlace({ open, onOpenChange }: Props) {
             <Label htmlFor="countryName" className="text-right">
               País
             </Label>
-            <CountryCombobox />
+            <CountryCombobox value={country} setValue={setCountry} />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="placeName" className="text-right">
@@ -67,7 +72,7 @@ export function AddPlace({ open, onOpenChange }: Props) {
           </div>
         </div>
         <DialogFooter className="flex gap-4">
-          <DialogClose>
+          <DialogClose asChild>
             <Button type="button" variant="secondary">
               Fechar
             </Button>
