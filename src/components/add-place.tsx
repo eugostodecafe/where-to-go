@@ -19,7 +19,7 @@ type Props = {
   open: boolean;
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
 };
-export function AddCountry({ open, onOpenChange }: Props) {
+export function AddPlace({ open, onOpenChange }: Props) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
