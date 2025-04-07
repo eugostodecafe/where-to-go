@@ -57,6 +57,7 @@ export function CountryCombobox() {
             <CommandGroup>
               {countries.map((country) => (
                 <CommandItem
+                  id="countryName"
                   key={country.value}
                   value={country.value}
                   onSelect={(currentValue) => {

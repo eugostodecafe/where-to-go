@@ -39,7 +39,7 @@ export function AddCountry({ open, onOpenChange }: Props) {
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="country" className="text-right">
+            <Label htmlFor="countryName" className="text-right">
               País
             </Label>
             <CountryCombobox />
@@ -55,11 +55,11 @@ export function AddCountry({ open, onOpenChange }: Props) {
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="date" className="text-right">
+            <Label htmlFor="targetDate" className="text-right">
               Meta
             </Label>
             <Input
-              id="place"
+              id="targetDate"
               placeholder="mm/aaaa"
               defaultValue="01/2025"
               className="col-span-3"
