@@ -1,12 +1,12 @@
 import { Header } from './components/ui/header.tsx';
-import { Countries } from './pages/countries.tsx';
+import { PlacesToGo } from './pages/places-to-go.tsx';
 
 function App() {
   return (
     <>
       <Header />
       <main className="flex justify-center align-center">
-        <Countries />
+        <PlacesToGo />
       </main>
     </>
   );
