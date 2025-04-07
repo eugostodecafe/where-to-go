@@ -1,32 +1,39 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Pencil, Trash } from 'lucide-react';
+import { Trash } from 'lucide-react';
+import { EditPlace } from '@/components/edit-place';
+import { useState } from 'react';
 
 type Props = {
+  id: string;
   countryName: string;
   placeName: string;
   targetDate: string;
 };
 
-export function PlaceCard({ countryName, targetDate, placeName }: Props) {
+export function PlaceCard(props: Props) {
+  const [openEditModal, setOpenEditModal] = useState(false);
+
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex justify-between items-center mb-4">
-          <p className="text-xl">{countryName}</p>
+          <p className="text-xl">{props.countryName}</p>
           <div className="flex gap-2">
-            <Button>
-              <Pencil />
-            </Button>
-            <Button variant="outline">
+            <EditPlace
+              {...props}
+              open={openEditModal}
+              onOpenChange={setOpenEditModal}
+            />
+            <Button variant="outline" onClick={() => {}}>
               <Trash />
             </Button>
           </div>
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <p>Local: {placeName}</p>
-        <p>Meta: {targetDate}</p>
+        <p>Local: {props.placeName}</p>
+        <p>Meta: {props.targetDate}</p>
       </CardContent>
     </Card>
   );
