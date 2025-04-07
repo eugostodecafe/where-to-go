@@ -1,8 +1,10 @@
+import { Header } from "./components/header.tsx"
+
 function App() {
 
   return (
     <>
-      <h1>Ola!</h1>
+      <Header />
     </>
   )
 }
