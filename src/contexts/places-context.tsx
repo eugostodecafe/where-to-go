@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { v4 as uuidv4 } from 'uuid';
 
 type Place = {
   id: string;
@@ -10,7 +11,12 @@ type Place = {
 
 type PlacesContextType = {
   places: Place[];
-  setPlaces: React.Dispatch<React.SetStateAction<Place[]>>;
+  addPlace: (place: Omit<Place, 'id'>) => void;
+  editPlace: (
+    id: string,
+    updatedPlace: Omit<Place, 'id' | 'countryName'>
+  ) => void;
+  deletePlace: (id: string) => void;
   countries: { value: string; label: string }[];
   isLoadingCountries: boolean;
 };
@@ -22,7 +28,34 @@ const PlacesContext = createContext<PlacesContextType | undefined>(undefined);
 const PlacesProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [places, setPlaces] = useState<Place[]>([]);
+  const [places, setPlaces] = useState<Place[]>(() => {
+    const storedPlaces = localStorage.getItem('places');
+    return storedPlaces ? JSON.parse(storedPlaces) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('places', JSON.stringify(places));
+  }, [places]);
+
+  const addPlace = (place: Omit<Place, 'id'>) => {
+    const newPlace = { ...place, id: uuidv4() };
+    setPlaces((prevPlaces) => [...prevPlaces, newPlace]);
+  };
+
+  const editPlace = (
+    id: string,
+    updatedPlace: Omit<Place, 'id' | 'countryName'>
+  ) => {
+    setPlaces((prevPlaces) =>
+      prevPlaces.map((place) =>
+        place.id === id ? { ...place, ...updatedPlace } : place
+      )
+    );
+  };
+
+  const deletePlace = (id: string) => {
+    setPlaces((prevPlaces) => prevPlaces.filter((place) => place.id !== id));
+  };
 
   const { data: countries = [] as Country[], isLoading: isLoadingCountries } =
     useQuery({
@@ -42,7 +75,14 @@ const PlacesProvider: React.FC<{ children: React.ReactNode }> = ({
 
   return (
     <PlacesContext.Provider
-      value={{ places, setPlaces, countries, isLoadingCountries }}
+      value={{
+        places,
+        addPlace,
+        editPlace,
+        deletePlace,
+        countries,
+        isLoadingCountries,
+      }}
     >
       {children}
     </PlacesContext.Provider>

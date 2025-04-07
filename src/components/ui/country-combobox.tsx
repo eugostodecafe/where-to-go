@@ -19,10 +19,11 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { usePlacesContext } from '@/contexts/places-context';
+import { toast } from 'sonner';
 
 type Props = {
   value: string;
-  setValue: React.Dispatch<React.SetStateAction<string>>;
+  setValue?: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export function CountryCombobox({ value, setValue }: Props) {
@@ -35,6 +36,7 @@ export function CountryCombobox({ value, setValue }: Props) {
         <Button
           variant="outline"
           role="combobox"
+          disabled={!setValue}
           aria-expanded={open}
           className="w-[200px] justify-between"
         >
@@ -46,7 +48,10 @@ export function CountryCombobox({ value, setValue }: Props) {
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Busque pelo país..." />
+          <CommandInput
+            disabled={!setValue}
+            placeholder="Busque pelo país..."
+          />
           <CommandList>
             <CommandEmpty>Carregando países</CommandEmpty>
             <CommandGroup>
@@ -55,7 +60,12 @@ export function CountryCombobox({ value, setValue }: Props) {
                   id="countryName"
                   key={country.value}
                   value={country.value}
+                  disabled={!setValue}
                   onSelect={(currentValue) => {
+                    if (!setValue) {
+                      toast('Não é possível editar o país!');
+                      return;
+                    }
                     setValue(currentValue === value ? '' : currentValue);
                     setOpen(false);
                   }}

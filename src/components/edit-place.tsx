@@ -15,6 +15,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { CountryCombobox } from './ui/country-combobox';
 import { useState } from 'react';
+import { toast } from 'sonner';
+import { usePlacesContext } from '@/contexts/places-context';
 
 type Props = {
   id: string;
@@ -32,9 +34,49 @@ export function EditPlace({
   open,
   onOpenChange,
 }: Props) {
-  const [country, setCountry] = useState(countryName);
+  const { countries, editPlace } = usePlacesContext();
   const [place, setPlace] = useState(placeName);
   const [target, setTarget] = useState(targetDate);
+
+  function handleSubmit() {
+    const errors: string[] = [];
+
+    if (countries.findIndex((c) => c.value === countryName) === -1) {
+      errors.push('País inválido.');
+    }
+
+    if (place.trim().length < 3) {
+      errors.push('O local deve ter pelo menos 3 caracteres.');
+    }
+
+    const [month, year] = target.split('/').map(Number);
+    const currentDate = new Date();
+    const targetDate = new Date(year, month - 1);
+
+    if (
+      isNaN(month) ||
+      isNaN(year) ||
+      month < 1 ||
+      month > 12 ||
+      targetDate <= currentDate
+    ) {
+      errors.push(
+        'A meta deve estar no formato mm/aaaa e ser uma data futura.'
+      );
+    }
+
+    if (errors.length > 0) {
+      errors.forEach((error) => toast(error));
+      return;
+    }
+
+    editPlace(id, {
+      placeName: place,
+      targetDate: target,
+    });
+
+    onOpenChange(false);
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -58,7 +100,7 @@ export function EditPlace({
             <Label htmlFor="countryName" className="text-right">
               País
             </Label>
-            <CountryCombobox value={country} setValue={setCountry} />
+            <CountryCombobox value={countryName} />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="placeName" className="text-right">
@@ -66,7 +108,9 @@ export function EditPlace({
             </Label>
             <Input
               id="placeName"
-              defaultValue="Serra do Cipó, MG"
+              placeholder="Serra do Cipó, MG"
+              value={place}
+              onChange={(e) => setPlace(e.currentTarget.value)}
               className="col-span-3"
             />
           </div>
@@ -77,7 +121,8 @@ export function EditPlace({
             <Input
               id="targetDate"
               placeholder="mm/aaaa"
-              defaultValue="01/2025"
+              value={target}
+              onChange={(e) => setTarget(e.currentTarget.value)}
               className="col-span-3"
             />
           </div>
@@ -88,7 +133,7 @@ export function EditPlace({
               Fechar
             </Button>
           </DialogClose>
-          <Button type="submit">Salvar</Button>
+          <Button onClick={handleSubmit}>Salvar</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

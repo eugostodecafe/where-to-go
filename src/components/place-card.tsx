@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Trash } from 'lucide-react';
 import { EditPlace } from '@/components/edit-place';
 import { useState } from 'react';
+import { usePlacesContext } from '@/contexts/places-context';
 
 type Props = {
   id: string;
@@ -12,6 +13,7 @@ type Props = {
 };
 
 export function PlaceCard(props: Props) {
+  const { deletePlace } = usePlacesContext();
   const [openEditModal, setOpenEditModal] = useState(false);
 
   return (
@@ -25,7 +27,12 @@ export function PlaceCard(props: Props) {
               open={openEditModal}
               onOpenChange={setOpenEditModal}
             />
-            <Button variant="outline" onClick={() => {}}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                deletePlace(props.id);
+              }}
+            >
               <Trash />
             </Button>
           </div>

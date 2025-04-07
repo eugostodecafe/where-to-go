@@ -2,30 +2,11 @@ import { AddPlace } from '@/components/add-place';
 import { PlaceCard } from '@/components/place-card';
 import { TypographyH2 } from '@/components/ui/h2';
 import { PageTitle } from '@/components/ui/page-title';
+import { usePlacesContext } from '@/contexts/places-context';
 import { useState } from 'react';
 
-const placesToGo = [
-  {
-    id: '1',
-    countryName: 'Brasil',
-    placeName: 'Serra do Cipó',
-    targetDate: '01/2025',
-  },
-  {
-    id: '2',
-    countryName: 'Brasil',
-    placeName: 'Serra do Cipó',
-    targetDate: '01/2025',
-  },
-  {
-    id: '3',
-    countryName: 'Brasil',
-    placeName: 'Serra do Cipó',
-    targetDate: '01/2025',
-  },
-];
-
 export function PlacesToGo() {
+  const { places } = usePlacesContext();
   const [openAddModal, setOpenAddModal] = useState(false);
 
   return (
@@ -34,23 +15,21 @@ export function PlacesToGo() {
         <PageTitle>Lugares para visitar</PageTitle>
         <AddPlace open={openAddModal} onOpenChange={setOpenAddModal} />
       </div>
-      {placesToGo.length === 0 ? (
+      {places.length === 0 ? (
         <TypographyH2>Não há nenhum lugar cadastrado no momento!</TypographyH2>
       ) : (
         <div className="grid grid-cols-3 gap-4 w-full">
-          {placesToGo.map(
-            ({ id: placeId, placeName, countryName, targetDate }) => {
-              return (
-                <PlaceCard
-                  key={`${countryName}-${placeName}-${targetDate}`}
-                  id={placeId}
-                  countryName={countryName}
-                  placeName={placeName}
-                  targetDate={targetDate}
-                />
-              );
-            }
-          )}
+          {places.map(({ id: placeId, placeName, countryName, targetDate }) => {
+            return (
+              <PlaceCard
+                key={placeId}
+                id={placeId}
+                countryName={countryName}
+                placeName={placeName}
+                targetDate={targetDate}
+              />
+            );
+          })}
         </div>
       )}
     </div>
